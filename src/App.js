@@ -1,52 +1,54 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Client from "./Client";
 import ClientForm from "./ClientForm";
+import Counter from "./Counter";
 
-class App extends React.Component{
-  state = {
-    clients: [
-      { id: 1, nom: "Lior Chamla" },
-      { id: 2, nom: "Magali Pernin" },
-      { id: 3, nom: "Joseph Durand" }
-    ]
-  };
+const App = () => {
 
-  handleDelete = id => {
-    const clients = [...this.state.clients];
-    const index = clients.findIndex(client => client.id === id);
 
-    clients.splice(index, 1);
+    const [clients, setClients] = useState([
+        {id: 1, nom: "Lior Chamla"},
+        {id: 2, nom: "Magali Pernin"},
+        {id: 3, nom: "Joseph Durand"},
+        ]);
 
-    this.setState({ clients });
-  };
 
-  handleAdd = client => {
-    const clients = [...this.state.clients];
-    clients.push(client);
+    const handleDelete = id => {
+        const updatedClients = [...clients];
+        const index = updatedClients.findIndex(client => client.id === id);
 
-    this.setState({ clients });
-  };
+        updatedClients.splice(index, 1);
 
-  render() {
+        setClients(updatedClients);
+    };
+
+    const handleAdd = client => {
+        const updatedClient = [...clients];
+        updatedClient.push(client);
+
+        setClients(updatedClient);
+    };
+
     const title = "Liste des clients";
 
     return (
         <div>
-          <h1>{title}</h1>
-          <ul>
-            {this.state.clients.map(client => (
-                <Client
-                    key={client.id}
-                    details={client}
-                    onDelete={this.handleDelete}
-                />
-            ))}
-          </ul>
-          <ClientForm onClientAdd={this.handleAdd} />
+            <h1>{title}</h1>
+            <Counter/>
+            <ul>
+                {clients.map(client => (
+                    <Client
+                        key={client.id}
+                        details={client}
+                        onDelete={handleDelete}
+                    />
+                ))}
+            </ul>
+            <ClientForm onClientAdd={handleAdd}/>
         </div>
     );
-  }
-}
+
+};
 
 export default App;
